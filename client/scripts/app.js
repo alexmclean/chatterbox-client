@@ -7,7 +7,7 @@ app.server = 'https://api.parse.com/1/classes/chatterbox';
 
 $(document).ready(function(){
   $('.submit').on('click', function(event){
-    //event.preventDefault();
+    event.preventDefault();
     console.log("in click repsonse");
     app.handleSubmit();
   });
@@ -41,15 +41,29 @@ app.fetch = function(){
     success: function (data) {
       console.log('chatterbox: Message sent');
       var results = data.results;
+      console.dir(results[0]);
+      var rooms = [];
       for(var i = 0; i < results.length; i++){
         app.addMessage(results[i]);
+        rooms.push(results[i].roomname);
       }
+      app.buildRooms(rooms);
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message');
     }
   });
+};
+
+app.buildRooms = function(rooms){
+  var isDuplicate = {};
+  for(var i = 0; i < rooms.length; i++){
+    if(!isDuplicate[rooms[i]]){
+      isDuplicate[rooms[i]] = true;
+      app.addRoom(rooms[i]);
+    }
+  }
 };
 
 
