@@ -11,10 +11,15 @@ $(document).ready(function(){
     console.log("in click repsonse");
     app.handleSubmit();
   });
+
+  $('#roomSelect').change(function(){
+    console.log($('#roomSelect').val());
+    app.fetch();
+  });
 });
 
 app.send = function(message){
-
+  console.log(message.roomname);
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: 'https://api.parse.com/1/classes/chatterbox',
@@ -32,6 +37,19 @@ app.send = function(message){
   });
 };
 
+function showMessages(results, roomName){
+  var rooms = [];
+
+  for(var i = 0; i < results.length; i++){
+    if(results[i].roomname === roomName || roomName === 'All Rooms'){
+      app.addMessage(results[i]);
+    }
+    rooms.push(results[i].roomname);
+  }
+  app.buildRooms(rooms);
+}
+
+
 app.fetch = function(){
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
@@ -41,13 +59,9 @@ app.fetch = function(){
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
-      var results = data.results;
-      var rooms = [];
-      for(var i = 0; i < results.length; i++){
-        app.addMessage(results[i]);
-        rooms.push(results[i].roomname);
-      }
-      app.buildRooms(rooms);
+      app.clearMessages();
+      showMessages(data.results, $('#roomSelect').val());
+
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -91,7 +105,8 @@ app.addFriend = function(){
 };
 
 app.handleSubmit = function(){
-  var messageText = {username: 'Me', text: $('#message').val(), roomname : 'my room'};
+  var roomName = $('#roomSelect').val();
+  var messageText = {username: 'Me', text: $('#message').val(), roomname : roomName};
   app.send(messageText);
 };
 
