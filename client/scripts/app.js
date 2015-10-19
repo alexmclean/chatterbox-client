@@ -23,6 +23,7 @@ app.send = function(message){
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
+      app.addMessage(message);
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -41,7 +42,6 @@ app.fetch = function(){
     success: function (data) {
       console.log('chatterbox: Message sent');
       var results = data.results;
-      console.dir(results[0]);
       var rooms = [];
       for(var i = 0; i < results.length; i++){
         app.addMessage(results[i]);
@@ -91,9 +91,8 @@ app.addFriend = function(){
 };
 
 app.handleSubmit = function(){
-  console.log("in submitter");
-  var messageText = {username: 'Me', message: $('#message').val(), roomname : 'my room'};
-  app.addMessage(messageText);
+  var messageText = {username: 'Me', text: $('#message').val(), roomname : 'my room'};
+  app.send(messageText);
 };
 
 app.init = function(){
