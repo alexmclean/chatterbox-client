@@ -111,7 +111,12 @@ app.addFriend = function(){
 };
 
 app.handleSubmit = function(){
-  var roomName = $('#roomSelect').val();
+  var roomName; 
+  if($('#roomMaker').val() === ''){
+    roomName = $('#roomSelect').val();
+  } else {
+    roomName = $('#roomMaker').val();
+  }
   var userName = $('#user').val();
   var messageText = {username: userName, text: $('#message').val(), roomname : roomName};
   app.send(messageText);
