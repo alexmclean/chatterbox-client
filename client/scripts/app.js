@@ -39,7 +39,9 @@ app.send = function(message){
 
 function showMessages(results, roomName){
   var rooms = [];
-
+  if(roomName === null){
+    roomName = 'All Rooms';
+  }
   for(var i = 0; i < results.length; i++){
     if(results[i].roomname === roomName || roomName === 'All Rooms'){
       app.addMessage(results[i]);
@@ -70,14 +72,21 @@ app.fetch = function(){
   });
 };
 
+// build dropdown menu to select room
 app.buildRooms = function(rooms){
+  var $roomChecker = $('#roomSelect');
+  console.dir($roomChecker);
+  var selected = $roomChecker.val() || 'All Rooms';
+  $roomChecker.empty();
   var isDuplicate = {};
   for(var i = 0; i < rooms.length; i++){
-    if(!isDuplicate[rooms[i]]){
+    if(!isDuplicate[rooms[i]] && rooms[i] !== selected){
       isDuplicate[rooms[i]] = true;
       app.addRoom(rooms[i]);
     }
   }
+  var $selectedNode = $('<option>' + selected + '</option>');
+  $selectedNode.prependTo($('#roomSelect'));
 };
 
 
