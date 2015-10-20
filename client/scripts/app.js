@@ -8,12 +8,10 @@ app.server = 'https://api.parse.com/1/classes/chatterbox';
 $(document).ready(function(){
   $('.submit').on('click', function(event){
     event.preventDefault();
-    console.log("in click repsonse");
     app.handleSubmit();
   });
 
   $('#roomSelect').change(function(){
-    console.log($('#roomSelect').val());
     app.fetch();
   });
 });
@@ -75,7 +73,6 @@ app.fetch = function(){
 // build dropdown menu to select room
 app.buildRooms = function(rooms){
   var $roomChecker = $('#roomSelect');
-  console.dir($roomChecker);
   var selected = $roomChecker.val() || 'All Rooms';
   $roomChecker.empty();
   var isDuplicate = {};
@@ -115,7 +112,8 @@ app.addFriend = function(){
 
 app.handleSubmit = function(){
   var roomName = $('#roomSelect').val();
-  var messageText = {username: 'Me', text: $('#message').val(), roomname : roomName};
+  var userName = $('#user').val();
+  var messageText = {username: userName, text: $('#message').val(), roomname : roomName};
   app.send(messageText);
 };
 
@@ -125,3 +123,4 @@ app.init = function(){
 };
 
 app.init();
+window.setInterval(app.fetch, 5000);
