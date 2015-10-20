@@ -4,8 +4,11 @@ var app = {
 };
 
 app.server = 'https://api.parse.com/1/classes/chatterbox';
+//storage for friend list
+app.isFriend = {};
 
 $(document).ready(function(){
+  console.log("called doc ready");
   $('.submit').on('click', function(event){
     event.preventDefault();
     app.handleSubmit();
@@ -95,8 +98,13 @@ app.addMessage = function(message){
   var $node = $('<div/>', {class : 'chat', text : message['text']});
   var $user = $('<div/>', {class : 'username', text : message['username']});
   $user.on('click', function(event){
-    app.addFriend($(this).val());
+    app.addFriend($(this).html());
   });
+  //console.log(app.isFriend[message['username']]);
+  if (app.isFriend[message['username']]){ 
+    $node.css('background-color', 'teal');
+    $node.css('color', 'white'); 
+  }
   $user.appendTo($node);
   $node.appendTo('#chats');
 };
@@ -106,8 +114,11 @@ app.addRoom = function(roomName){
   $choice.appendTo('#roomSelect');
 };
 
-app.addFriend = function(){
-
+app.addFriend = function(name){
+  if (!app.isFriend[name]) {
+    app.isFriend[name] = true;
+  }
+  console.dir(app.isFriend);
 };
 
 app.handleSubmit = function(){
